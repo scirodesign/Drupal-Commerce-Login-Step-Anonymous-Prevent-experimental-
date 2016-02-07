@@ -1,0 +1,5 @@
+name = Commerce Double Check Emai
+description = Force anonymous users back if cart email is not there
+package = Commerce (contrib)
+dependencies[] = commerce_cart
+core = 7.x

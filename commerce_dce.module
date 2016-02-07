@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Checks order post commerce login page to see if email is present, if it is NOT then it redirects user to cart page and lets them know there is a problem and to try again
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * This module works by altering the checkout form to add an additional bit of
+ * AJAX to the Account Information checkout pane via this hook.
+ */
+ 
+
+function commerce_dce_commerce_checkout_pane_info_alter(&$checkout_pane) {
+	
+
+global $user;
+$uid = 0;	
+$cart = commerce_cart_order_load($user->uid);
+	
+//for anonymous
+if ($order = commerce_cart_order_load($uid)) {
+	//if userid is 0 (anon), and their mail is empty, and they are past the login, and the url contains checkout
+	if ($order->uid == 0 && empty($order->mail) && $order->status == "checkout_checkout" && drupal_match_path(current_path(), "checkout/*") || $order->uid == 0 && empty($order->mail) && $order->status == "checkout_review" && drupal_match_path(current_path(), "checkout/*")) {
+
+	//display error message
+	drupal_set_message("An error has occured, no email found on order. Please try to checkout out again", 'error');
+	//redirect user to try again
+	drupal_goto('cart');
+	}
+}
+	
+}
